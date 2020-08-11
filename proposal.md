@@ -18,6 +18,6 @@
   - FE 에서 넘어온 값들을 처리한다. (저장, 불렁오기)
   - 매일 특정 시간에 `날씨`, `주가(코스피 지수)`, `실시간 키워드`를 수집한다.
 - 카카오 Bot
- - 기념일을 등록할 수 있음 (예, `기념일 등록, 7월 21일, 최찬규 생일`)
- - 매일 특정 시간에 `기념일 내용`, `날씨`, `주가(코스피 지수)`, `실시간 키워드`를 출력한다.
- ![layout.jpeg](https://raw.githubusercontent.com/chankyu-choi/sparta_homework/master/layout.jpeg)
+  - 기념일을 등록할 수 있음 (예, `기념일 등록, 7월 21일, 최찬규 생일`)
+  - 매일 특정 시간에 `기념일 내용`, `날씨`, `주가(코스피 지수)`, `실시간 키워드`를 출력한다.
+![layout.jpeg](https://raw.githubusercontent.com/chankyu-choi/sparta_homework/master/layout.jpeg)
