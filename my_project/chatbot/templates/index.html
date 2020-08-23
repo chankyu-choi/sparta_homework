@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- Webpage Title -->
+    <title>Chatbot Front</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+    <!-- 구글폰트 -->
+    <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
+
+    <script type="text/javascript">
+        function isCellPhone(p) {
+            let regExp = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})[-][0-9]{3,4}[-][0-9]{4}$/;
+            return regExp.test(p);
+        }
+
+        function write() {
+            let date = $("#write-date").val();
+            let content = $("#write-content").val();
+
+            if (date == "") {
+                alert("이름을 입력해주세요")
+                $("#write-date").focus()
+                return
+            } else if (content == "") {
+                alert("수량을 입력해주세요")
+                $("#write-content").focus()
+                return
+            } else if (!isCellPhone(phone)) {
+                alert("휴대폰번호 입력 형식이 틀립니다. \n 010-0000-0000으로 입력해주세요")
+                return
+            }
+
+            // 주문하기 API를 사용해 여기를 채워주세요
+            $.ajax({
+                type: "POST",
+                url: "/order",
+                data: {
+                    'name': name,
+                    'count': count,
+                    'address': address,
+                    'phone': phone,
+                },
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        alert(response["msg"]);
+                        window.location.reload();
+                    }
+                }
+            })
+        }
+
+        $(document).ready(function () {
+            $("#orders-box").html("");
+            showOrders();
+        });
+
+        function showOrders() {
+            // 주문 목록보기 API 를 사용해 여기를 채워주세요
+            $.ajax({
+                type: "GET",
+                url: "/order",
+                data: {},
+                success: function (response) {
+                    // 2. 요청 성공 여부 확인하기
+                    if (response["result"] == "success") {
+                        let orders = response["orders"];
+                        // 3. 요청 성공했을 때 리뷰를 올바르게 화면에 나타내기
+                        for (let i = 0; i < orders.length; i++) {
+                            let name = orders[i]['name'];
+                            let count = orders[i]['count'];
+                            let address = orders[i]['address'];
+                            let phone = orders[i]['phone'];
+                            makeOrderRow(name, count, address, phone);
+                        }
+                    } else {
+                        alert("리뷰를 받아오지 못했습니다");
+                    }
+                }
+            })
+        }
+
+        function makeOrderRow(date, content, weather, stock, keyword) {
+            let tempHtml = `<tr>\
+                                <td>${date}</td>
+                                <td>${content}</td>
+                                <td>${weather}</td>
+                                <td>${stock}</td>
+                                <td>${keyword}</td>
+                              </tr>`;
+
+            $("#write-boxes").append(tempHtml);
+        }
+    </script>
+
+    <style type="text/css">
+        * {
+            font-family: "Stylish", sans-serif;
+        }
+
+        h1, h5 {
+            display: inline;
+        }
+
+        .wrap {
+            width: 500px;
+            margin: auto;
+        }
+
+        .img {
+            background-image: url("https://miro.medium.com/max/800/1*4QemAP2IzD_8ct2f3kySvg.jpeg");
+            background-size: cover;
+            background-position: center;
+            width: 500px;
+            height: 300px;
+        }
+
+        .info {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .order {
+            text-align: center;
+        }
+
+        .orders {
+            margin-top: 100px;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="img"></div>
+    <div class="info">
+        <h1>나만의 챗봇 알람</h1>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">기념일 날짜</span>
+            </div>
+            <input type="text" class="form-control" id="write-date">
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">기념일 내용</span>
+            </div>
+            <input type="text" class="form-control" id="write-content">
+        </div>
+        <div class="order">
+            <button onclick="write()" type="button" class="btn btn-primary">입력</button>
+        </div>
+    </div>
+    <div class="writers">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">기념일 날짜</th>
+                <th scope="col">기념일 내용</th>
+                <th scope="col">날씨</th>
+                <th scope="col">코스피 지수</th>
+                <th scope="col">실시간 키워드</th>
+            </tr>
+            </thead>
+            <tbody id="write-boxes">
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
