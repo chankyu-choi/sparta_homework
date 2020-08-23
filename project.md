@@ -21,3 +21,11 @@
   - 기념일을 등록할 수 있음 (예, `기념일 등록, 7월 21일, 최찬규 생일`)
   - 매일 특정 시간에 `기념일 내용`, `날씨`, `주가(코스피 지수)`, `실시간 키워드`를 출력한다.
 - ![layout.jpeg](https://raw.githubusercontent.com/chankyu-choi/sparta_homework/master/layout.jpeg)
+
+### 개발일지
+- 20200812
+  - [X] [FE] index.html 제작
+  - [X] [BE] 스케쥴러 API 테스트 (주기적으로 날씨, 주가, 실시간 키워드 등의 정보를 크롤링 하기 위한 목적)
+  
+- 20200824
+  - [X] [6주차 강의 복습](https://www.notion.so/6-31016b3771ae4afb8b0d1c8d9941a508)
