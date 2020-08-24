@@ -29,7 +29,7 @@
 - 20200824
   - [X] [6주차 강의 복습](https://www.notion.so/6-31016b3771ae4afb8b0d1c8d9941a508)
     - AWS에 flast 설치하고, 5000 포트 열어서 test.py 실행
-  - [X] 날씨, 주가, 실시간 키워드 크롤링 소스 
+  - [X] 날씨, 주가, 실시간 키워드 크롤링 출처(소스) 정리
     - 기상청 날씨 정보 : http://www.kma.go.kr/weather/forecast/mid-term-rss3.jsp?stnId=109
     - 주가 정보
        - 코스피 : https://finance.naver.com/sise/sise_index.nhn?code=KOSPI
@@ -39,4 +39,8 @@
   - [ ] 카카오톡 연동 방법 검색 (feasible test 진행중)
     - [ ] ~~NOX 등 애뮬레이터 설치하려고 했으나 맥에서 잘 안됨~~ 
     - [X] 모바일 공기계 구해서 TextNow 설치하고, 핸드폰 번호 발급 받아 카카오톡 계정 발급 완료
-   
+- 남은 일
+  - [ ] 날씨, 주가, 실시간 키워드 크롤링 코드 작성 (~7주차)
+  - [ ] FE/BE 연동 (DB 작성, 불러오기) (~7주차)
+  - [ ] 카카오톡 연동 (~8주차)
+  - [ ] GPT-3 연동 (선택)
