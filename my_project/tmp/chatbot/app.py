@@ -35,27 +35,6 @@ def load_db():
     result = list(db.chatbot.find({}, {'_id': False}))
     return jsonify({'result': 'success', 'db': result})
 
-# 기념일 읽기 (for chatbot)
-@app.route('/readStr', methods=['GET'])
-def load_db():
-    import datetime
-    now = datetime.datetime.now()
-    results = list(db.chatbot.find({}, {'_id': False}))
-    count = 0
-    result_string = "오늘의 기념일은 \n"
-    # print
-    # now.year, ,
-    for result in results:
-        if "%04d-%02d-%02d"%(now.year, now.month, now.day) == result['date']:
-            count += 1
-            result_string += "- %s\n"%result['content']
-    if count == 0:
-        result_string = "오늘은 기념일이 없습니다."
-    else:
-        result_string = "오늘은 기념일이 2건 있습니다.\n%s"%result_string
-    print (result_string)
-    return jsonify({'result': 'success', 'db': result_string})
-
 # 코스피 지수
 @app.route('/kospi', methods=['GET'])
 def kospi():

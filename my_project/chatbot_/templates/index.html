@@ -2,7 +2,11 @@
 <html lang="ko">
 <head>
     <!-- Webpage Title -->
-    <title>나홀로 쇼핑몰</title>
+    <title>기념일 등록 페이</title>
+
+    <meta property="og:title" content="기념일 등록 페이지"/>
+    <meta property="og:description" content="챗봇에서 볼 수 있는 기념일을 등록합니다."/>
+    <meta property="og:image" content="{{ url_for('static', filename='chatbot.jpeg') }}"/>
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -21,29 +25,12 @@
 
     <!-- 구글폰트 -->
     <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
-
     <script type="text/javascript">
-        function isDate(p) {
-            var dayRegExp = /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/;
-            return dayRegExp.test(p);
-        }
-
-        function order() {
+        function write() {
             let date = $("#write-date").val();
             let content = $("#write-content").val();
-
-            //if (date == "") {
-            if (!isDate(date)) {
-                alert("기념일 입력 형식이 틀립니다.\nYYYY-MM-DD으로 입력해주세요.")
-                $("#write-date").focus()
-                return
-            } else if (content == "") {
-                alert("기념 내용을 입력해주세요")
-                $("#write-content").focus()
-                return
-            }
-
-            // 주문하기 API를 사용해 여기를 채워주세요
+            alert("write")
+            console.log("write")
             $.ajax({
                 type: "POST",
                 url: "/write",
@@ -59,45 +46,7 @@
                 }
             })
         }
-
-        $(document).ready(function () {
-            $("#orders-box").html("");
-            showOrders();
-        });
-
-        function showOrders() {
-            // 주문 목록보기 API 를 사용해 여기를 채워주세요
-            $.ajax({
-                type: "GET",
-                url: "/read",
-                data: {},
-                success: function (response) {
-                    // 2. 요청 성공 여부 확인하기
-                    if (response["result"] == "success") {
-                        let db = response["db"];
-                        // 3. 요청 성공했을 때 리뷰를 올바르게 화면에 나타내기
-                        for (let i = 0; i < db.length; i++) {
-                            let date = db[i]['date'];
-                            let content = db[i]['content'];
-                            makeOrderRow(date, content);
-                        }
-                    } else {
-                        alert("데이터를 받아오지 못했습니다");
-                    }
-                }
-            })
-        }
-
-        function makeOrderRow(date, content) {
-            let tempHtml = `<tr>\
-                                <td>${date}</td>
-                                <td>${content}</td>
-                              </tr>`;
-
-            $("#orders-box").append(tempHtml);
-        }
     </script>
-
     <style type="text/css">
         * {
             font-family: "Stylish", sans-serif;
@@ -152,18 +101,18 @@
             <input type="text" class="form-control" id="write-content">
         </div>
         <div class="order">
-                <button onclick="order()" type="button" class="btn btn-primary">입력</button>
+            <button onclick="write()" type="button" class="btn btn-primary">입력</button>
         </div>
     </div>
-    <div class="orders">
+    <div class="writers">
         <table class="table">
             <thead>
             <tr>
-                <th scope="col">날짜</th>
-                <th scope="col">내용</th>
+                <th scope="col">기념일 날짜</th>
+                <th scope="col">기념일 내용</th>
             </tr>
             </thead>
-            <tbody id="orders-box">
+            <tbody id="write-boxes">
             </tbody>
         </table>
     </div>

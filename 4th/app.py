@@ -5,29 +5,25 @@ app = Flask(__name__)
 from pymongo import MongoClient
 
 client = MongoClient('localhost', 27017)
-db = client.dbhomework
+db = client.sparta
 
-
-## HTML 화면 보여주기
+# 시작 페이지
 @app.route('/')
-def homework():
+def main():
     return render_template('index.html')
 
-
-# 주문하기(POST) API
-@app.route('/order', methods=['POST'])
-def save_order():
-    name = request.form['name']
-    count = request.form['count']
-    address = request.form['address']
-    phone = request.form['phone']
+# 기념일 등
+@app.route('/write', methods=['POST'])
+def save_db():
+    print ("svae_db")
+    date = request.form['date']
+    content = request.form['content']
+    print (date, content)
     doc = {
-        'name': name,
-        'count': count,
-        'address': address,
-        'phone': phone,
+        'date': date,
+        'content': content,
     }
-    db.orders.insert_one(doc)
+    db.chatbot.insert_one(doc)
 
     return jsonify({'result': 'success'})
 
