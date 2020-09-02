@@ -23,30 +23,45 @@
     <title> 카카오 봇 스크립트 </title>
     <script>
         $(document).ready(function () {
-            // html = `
-            // <html>
-            //  <head></head>
-            //  <body>
-            //   { "kospi": "\ucf54\uc2a4\ud53c\ub294 2,326.17\uc6d0\uc73c\ub85c \uc804\uc77c \ub300\ube44 -27.63\uc6d0(-1.17%)\uc785\ub2c8\ub2e4.", "result": "success" }
-            //  `
-            // kospi = html.substring(html.indexOf("\"kospi\": ")+10, html.indexOf("\"result\"")-3)
-            //
-            // html = `<html>
-            //          <head></head>
-            //          <body>
-            //           { "result": "success", "weather": "\uc11c\uc6b8:27.2\u00b0(Cloudy)" }
-            //         `
-            // weather = html.substring(html.indexOf("\"weather\": ")+12, html.indexOf("\" }"))
-            // alert(weather)
+            function toString(unicodeString) {
+                var r = /\\u([\d\w]{4})/gi;
+                unicodeString = unicodeString.replace(r, function (match, grp) {
+                    return String.fromCharCode(parseInt(grp, 16));
+                });
+                return unescape(unicodeString);
+            }
 
-            // html = `
-            // <html>
-            //  <head></head>
-            //  <body>
-            //   { "db": "\uc624\ub298\uc740 \uae30\ub150\uc77c\uc774 1\uac74 \uc788\uc2b5\ub2c8\ub2e4.\\n- 2020\ub144 8\uc6d4 \ub9c8\uc9c0\ub9c9\ub0a0...", "result": "success" }
-            // `
-            // db = html.substring(html.indexOf("\"db\": ")+7, html.indexOf("\"result\"")-3)
-            // alert(db)
+            function response(room, msg, sender, isGroupChat, replier, ImageDB, packageName) {
+                if (msg == '우후라') {
+                    replier.reply('만세');
+                } else if (msg == '뚱') {
+                    replier.reply('언제오냐');
+                } else if (msg == "네이버 실검") {
+                    var data = org.jsoup.Jsoup.connect("https://m.search.naver.com/search.naver?query=실시간%20검색어").get().select("span.tit") + "";
+                    data = data.replace(/<[^>]+>/g, "");
+                    data = data.split("\n");
+                    var result = "";
+                    for (var n = 0; n < 10; n++) {
+                        result += (n + 1) + "위: " + data[n] + "\n";
+                    }
+                    replier.reply("[네이버 실시간 검색어 순위]\n\n" + result.trim());
+                } else if (msg == '코스피') {
+                    var html = Utils.getWebText("http://3.34.124.30:5000/kospi")
+                    kospi = html.substring(html.indexOf("\"kospi\": ") + 10, html.indexOf("\"result\"") - 3)
+                    kospi = toString(kospi)
+                    replier.reply(kospi)
+                } else if (msg == '날씨') {
+                    var html = Utils.getWebText("http://3.34.124.30:5000/weather")
+                    weather = html.substring(html.indexOf("\"weather\": ") + 12, html.indexOf("\" }"))
+                    weather = toString(weather)
+                    replier.reply(weather)
+                } else if (msg == '기념일') {
+                    var html = Utils.getWebText("http://3.34.124.30:5000/readStr")
+                    date = html.substring(html.indexOf("\"db\": ") + 7, html.indexOf("\"result\"") - 3)
+                    date = toString(date)
+                    replier.reply(date)
+                }
+            }
 
         });
     </script>
