@@ -1,14 +1,13 @@
 from flask import Flask, render_template, jsonify, request
-from flask_cors import CORS
 from pymongo import MongoClient
 import requests
 from bs4 import BeautifulSoup
 
-app = Flask(__name__)
-CORS(app)
 
-client = MongoClient('mongodb://test:test@localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
+client = MongoClient('localhost', 27017)
 db = client.sparta
+
+app = Flask(__name__)
 
 headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
@@ -38,20 +37,24 @@ def load_db():
 
 # 기념일 읽기 (for chatbot)
 @app.route('/readStr', methods=['GET'])
-def load_db2():
+def load_db():
     import datetime
     now = datetime.datetime.now()
     results = list(db.chatbot.find({}, {'_id': False}))
-    result_string = ""
     count = 0
+    result_string = "오늘의 기념일은 \n"
+    # print
+    # now.year, ,
     for result in results:
-        if "%04d-%02d-%02d"%(int(now.year), int(now.month), int(now.day)) == result['date']:
-            if count > 0:
-                result_string += ", "
-            result_string += "%s"%result['content']
+        if "%04d-%02d-%02d"%(now.year, now.month, now.day) == result['date']:
             count += 1
-    result_string += "(%d건)"%count
-    return jsonify({'result': 'success', 'db': result_string.strip()})
+            result_string += "- %s\n"%result['content']
+    if count == 0:
+        result_string = "오늘은 기념일이 없습니다."
+    else:
+        result_string = "오늘은 기념일이 2건 있습니다.\n%s"%result_string
+    print (result_string)
+    return jsonify({'result': 'success', 'db': result_string})
 
 # 코스피 지수
 @app.route('/kospi', methods=['GET'])
@@ -74,11 +77,13 @@ def weather():
         'https://weather.com/weather/today/l/142d25167924cf52b9f5ac8c7fcae8d23b95524ab51af1f534a1e8efc246914c',
         headers=headers)
     soup = BeautifulSoup(data.text, 'html.parser')
-    temp = soup.select_one('#WxuCurrentConditions-main-b3094163-ef75-4558-8d9a-e35e6b9b1034 > div > section > div > div._-_-node_modules-\@wxu-components-src-organism-CurrentConditions-CurrentConditions--dataWrapperInner--2h2vG > div._-_-node_modules-\@wxu-components-src-organism-CurrentConditions-CurrentConditions--primary--3xWnK > span').text.strip()
+    temp = soup.select_one(
+        '#WxuCurrentConditions-main-b3094163-ef75-4558-8d9a-e35e6b9b1034 > div > section > div > div._-_-node_modules--wxu-components-src-organism-CurrentConditions-CurrentConditions--dataWrapperInner--2h2vG > div._-_-node_modules--wxu-components-src-organism-CurrentConditions-CurrentConditions--primary--3xWnK > span').text.strip()
     temp = float((int(temp.replace("°", "")) - 32) * 5. / 9.)
 
-    desc = soup.select_one('#WxuCurrentConditions-main-b3094163-ef75-4558-8d9a-e35e6b9b1034 > div > section > div > div._-_-node_modules-\@wxu-components-src-organism-CurrentConditions-CurrentConditions--dataWrapperInner--2h2vG > div._-_-node_modules-\@wxu-components-src-organism-CurrentConditions-CurrentConditions--primary--3xWnK > div').text.strip()
-    result_string = "현재 서울의 기온은 %0.1f°이며, '%s' 합니다." % (temp, desc)
+    desc = soup.select_one(
+        '#WxuCurrentConditions-main-b3094163-ef75-4558-8d9a-e35e6b9b1034 > div > section > div > div._-_-node_modules--wxu-components-src-organism-CurrentConditions-CurrentConditions--dataWrapperInner--2h2vG > div._-_-node_modules--wxu-components-src-organism-CurrentConditions-CurrentConditions--primary--3xWnK > div').text.strip()
+    result_string = "서울:%0.1f°(%s)" % (temp, desc)
 
     return jsonify({'result': 'success', 'weather': result_string})
 
